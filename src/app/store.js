@@ -2,9 +2,11 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
 import thunk from 'redux-thunk';
 
-import { players } from './AddPlayers/AddPlayersReducer';
+import navReducer from './NavigationReducer';
+import { players } from '../AddPlayers/AddPlayersReducer';
 
 const sushiGoApp = combineReducers({
+    nav: navReducer,
     players
 });
 

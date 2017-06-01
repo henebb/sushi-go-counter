@@ -5,23 +5,13 @@ import {
   View,
   Platform,
   ActivityIndicator } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+
 import { Provider } from 'react-redux';
 import { Font } from 'expo';
 
-import store from './src/store';
+import store from './src/app/store';
+import Navigation from './src/app/Navigation';
 import { colors } from './src/style';
-import StartScreen from './src/screens/StartScreen';
-import AddPlayersScreen from './src/AddPlayers/AddPlayersScreen';
-import GameStartedScreen from './src/screens/GameStartedScreen';
-
-const Stack = StackNavigator({
-  Start: { screen: StartScreen },
-  AddPlayers: { screen: AddPlayersScreen },
-  GameStarted: { screen: GameStartedScreen }
-  }, {
-    headerMode: 'none'
-  });
 
 export default class App extends Component {
   state = {
@@ -46,7 +36,7 @@ export default class App extends Component {
     return (
       <Provider store={store}>
         <View style={ styles.viewStyle }>
-          <Stack />
+          <Navigation />
         </View>
       </Provider>
     );

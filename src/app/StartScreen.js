@@ -8,6 +8,8 @@ import {
   Platform, 
   TouchableNativeFeedback, 
   TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import { push } from '../app/NavigationReducer';
 import Button from '../components/Button';
 import { colors, fontFamily } from "../style";
 
@@ -29,8 +31,6 @@ class StartScreen extends Component {
   };
 
   render() {
-    const { navigate } = this.props.navigation;
-
     return (
       <View style={styles.container}>
         <View style={[styles.imageContainer, {height: this.state.imageHeight}]} onLayout={this.onLayout}>
@@ -43,7 +43,7 @@ class StartScreen extends Component {
           <Button
             large
             title="Add Players"
-            onPress={() => { navigate('AddPlayers'); }}
+            onPress={() => { this.props.push('AddPlayers'); }}
           />
         </View>
       </View>
@@ -74,4 +74,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StartScreen;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    push: (routeName, props) => dispatch(push(routeName, props))
+  }
+};
+
+export default connect(null, mapDispatchToProps)(StartScreen);

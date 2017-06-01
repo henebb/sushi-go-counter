@@ -10,6 +10,7 @@ import {
     TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { MaterialCommunityIcons as Icons } from '@expo/vector-icons';
+import { push } from '../app/NavigationReducer';
 import Button from '../components/Button';
 import { colors, fontFamily } from "../style";
 import { addPlayer, updateNewPlayer, removePlayer } from './AddPlayersReducer';
@@ -21,7 +22,8 @@ class AddPlayersScreen extends Component {
         addPlayer: PropTypes.func.isRequired,
         updateNewPlayer: PropTypes.func.isRequired,
         removePlayer: PropTypes.func.isRequired,
-    };1
+        push: PropTypes.func.isRequired
+    };
 
     state = {
         keyboardShowing: false
@@ -119,8 +121,6 @@ class AddPlayersScreen extends Component {
     }
 
     renderStartButton() {
-        const { navigate } = this.props.navigation;
-
         if (this.props.players.length < 2 || this.props.players.length > 5) {
             return null; 
         }
@@ -128,7 +128,7 @@ class AddPlayersScreen extends Component {
             <View style={{ marginTop: 10 }}>
                 <Button 
                     title="Start Game"
-                    onPress={() => { navigate('GameStarted'); }}
+                    onPress={() => { Keyboard.dismiss(); this.props.push('ScoreBoard'); }}
                 />
             </View>
         );
@@ -223,7 +223,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         addPlayer: (player, playerList) => { dispatch(addPlayer(player, playerList)); },
         updateNewPlayer: (name) => { dispatch(updateNewPlayer(name)); },
-        removePlayer: (name) => { dispatch(removePlayer(name)); }
+        removePlayer: (name) => { dispatch(removePlayer(name)); },
+        push: (routeName, props) => dispatch(push(routeName, props))
     };
 };
 

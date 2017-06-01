@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { 
     View,
     Text } from 'react-native';
 
-class GameStartedScreen extends Component {
+class ScoreBoardScreen extends Component {
     render() {
         return (
             <View>
-                <Text>Start Game</Text>
+                <Text>ScoreBoard</Text>
             </View>
         );
     }
 }
 
-export default GameStartedScreen;
+export default connect()(ScoreBoardScreen);

@@ -8,9 +8,10 @@ class Button extends Component {
         return (
             <Component
                 onPress={this.props.onPress}
+                disabled={this.props.disabled}
             >
-                <View style={ this.props.large ? styles.buttonStyle : styles.buttonStyleSmall }>
-                    <Text style={ this.props.large ? styles.buttonTextStyle : styles.buttonTextStyleSmall }>
+                <View style={this.props.large ? styles.buttonStyle : styles.buttonStyleSmall}>
+                    <Text style={this.props.large ? styles.buttonTextStyle : styles.buttonTextStyleSmall}>
                         {this.props.title}
                     </Text>
                 </View>
