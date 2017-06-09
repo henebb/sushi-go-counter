@@ -4,10 +4,12 @@ import thunk from 'redux-thunk';
 
 import navReducer from './NavigationReducer';
 import { players } from '../AddPlayers/AddPlayersReducer';
+import { scoreBoard } from '../ScoreBoard/ScoreBoardReducer';
 
 const sushiGoApp = combineReducers({
     nav: navReducer,
-    players
+    players,
+    scoreBoard
 });
 
 const logger = createLogger({

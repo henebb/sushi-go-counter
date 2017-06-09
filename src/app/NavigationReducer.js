@@ -12,15 +12,13 @@ const initialState = {
     }]
 }
 
-export const pop = () => {
+export const popNavigate = () => {
     return {
         type: POP
     };
 };
 
-export const push = (routeName, props) => {
-    // debugger;
-    // var c = guid();
+export const pushNavigate = (routeName, props) => {
     return {
         type: PUSH,
         route: {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { View, Text, TouchableNativeFeedback, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { colors, fontFamily } from "../style";
 
@@ -17,6 +17,13 @@ class Button extends Component {
                 </View>
             </Component>
         );
+    }
+
+    static propTypes = {
+        disabled: PropTypes.bool,
+        large: PropTypes.bool,
+        title: PropTypes.string,
+        onPress: PropTypes.func.isRequired
     }
 }
 

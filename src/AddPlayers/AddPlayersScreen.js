@@ -7,13 +7,18 @@ import {
     TextInput, 
     Platform,
     Keyboard,
-    TouchableOpacity } from 'react-native';
+    TouchableOpacity,
+    ToastAndroid,
+    Alert
+} from 'react-native';
 import { connect } from 'react-redux';
 import { MaterialCommunityIcons as Icons } from '@expo/vector-icons';
-import { push } from '../app/NavigationReducer';
+import { pushNavigate } from '../app/NavigationReducer';
 import Button from '../components/Button';
-import { colors, fontFamily } from "../style";
+import i18n from '../i18n/translations';
+import { colors, fontFamily, globalStyles } from "../style";
 import { addPlayer, updateNewPlayer, removePlayer } from './AddPlayersReducer';
+import { startNewGame } from '../ScoreBoard/ScoreBoardReducer';
 
 class AddPlayersScreen extends Component {
     static propTypes = {
@@ -22,7 +27,8 @@ class AddPlayersScreen extends Component {
         addPlayer: PropTypes.func.isRequired,
         updateNewPlayer: PropTypes.func.isRequired,
         removePlayer: PropTypes.func.isRequired,
-        push: PropTypes.func.isRequired
+        pushNavigate: PropTypes.func.isRequired,
+        startNewGame: PropTypes.func.isRequired
     };
 
     state = {
@@ -50,30 +56,32 @@ class AddPlayersScreen extends Component {
     renderPlayersList() {
         let playersList;
         if (this.props.players.length === 0) {
-            playersList = (<Text style={[styles.textStyleOnBlack, {fontSize: 20, paddingLeft: 20}]}>
-                No players added. Add below.
+            playersList = (<Text style={[globalStyles.textStyleOnBlack, {fontSize: 20, paddingLeft: 20}]}>
+                {i18n.t('noPlayers_Add')}
             </Text>);
         }
         else {
             playersList = this.props.players.map((player) => {
                 return (
-                    <View key={player} style={ styles.listItemStyle }>
-                        <Text style={[styles.textStyle, styles.textShadowDark]}>
-                            {player}
-                        </Text>
-                        <TouchableOpacity 
-                            style={{ paddingRight: 10 }}
-                            onPress={() => this.props.removePlayer(player)}
-                        >
-                            <Icons name="delete-forever" size={32} color={colors.green} style={styles.textShadowDark} />
-                        </TouchableOpacity>
+                    <View key={player} style={ globalStyles.playersListItemStyle }>
+                        <View style={ globalStyles.playersListContentStyle }>
+                            <Text style={[globalStyles.playersListTextStyle, globalStyles.textShadowDark]}>
+                                {player}
+                            </Text>
+                            <TouchableOpacity 
+                                style={{ paddingRight: 10 }}
+                                onPress={() => this.props.removePlayer(player)}
+                            >
+                                <Icons name="delete-forever" size={32} color={colors.green} style={globalStyles.textShadowDark} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 );
             });
         }
         return (
             <View>
-                <Text style={styles.textStyleOnBlack}>Players:</Text>
+                <Text style={globalStyles.textStyleOnBlack}>{i18n.t('players')}:</Text>
                 {playersList}
             </View>
             
@@ -98,8 +106,8 @@ class AddPlayersScreen extends Component {
         }
         return (
             <View>
-                <Text style={styles.textStyleOnBlack}>
-                    Player Name:
+                <Text style={globalStyles.textStyleOnBlack}>
+                    {i18n.t('playerName')}:
                 </Text>
                 <View>
                     <TextInput
@@ -113,7 +121,7 @@ class AddPlayersScreen extends Component {
                     />
                 </View>
                 <Button 
-                    title="Add Player"
+                    title={i18n.t('addPlayer')}
                     onPress={this.addPlayer}
                 />
             </View>
@@ -127,16 +135,31 @@ class AddPlayersScreen extends Component {
         return (
             <View style={{ marginTop: 10 }}>
                 <Button 
-                    title="Start Game"
-                    onPress={() => { Keyboard.dismiss(); this.props.push('ScoreBoard'); }}
+                    title={i18n.t('startGame')}
+                    onPress={this.startGame}
                 />
             </View>
         );
-    
     }
 
+    startGame = ()  => {
+        Keyboard.dismiss(); 
+        this.props.startNewGame(this.props.players);
+        this.props.pushNavigate('ScoreBoard');
+    };
+
     addPlayer = () => {
-        this.props.addPlayer(this.props.newPlayer, this.props.players);
+        if (this.props.players.findIndex(pl => pl === this.props.newPlayer) !== -1) {
+            // Player already exists.   
+            if (Platform.OS === 'android') {
+                ToastAndroid.showWithGravity(i18n.t('playerAlreadyExistsTitle'), ToastAndroid.SHORT, ToastAndroid.TOP);
+            } else {
+                Alert.alert(i18n.t('playerAlreadyExistsTitle'), i18n.t('playerAlreadyExistsMessage'));
+            }
+        } else {
+            // Add player
+            this.props.addPlayer(this.props.newPlayer, this.props.players);
+        }
     };
 
     render() {
@@ -168,32 +191,6 @@ const styles = StyleSheet.create({
         alignItems: "stretch", 
         backgroundColor: colors.containerBgColor
     },
-    listItemStyle: {
-        marginBottom: 10,
-        padding: 2,
-        paddingLeft: 20,
-        borderRadius: 20,
-        backgroundColor: colors.redLight,
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center"
-    },
-    textStyle: {
-        color: colors.green,
-        fontFamily: fontFamily,
-        fontSize: 32
-    },
-    textShadowDark: {
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 6,
-        textShadowColor: "#000c"
-    },
-    textStyleOnBlack: {
-        color: colors.green,
-        fontFamily: fontFamily,
-        fontSize: 16
-    },
     textInputWrapperStyle: {
         ...Platform.select({
             ios: {
@@ -224,7 +221,8 @@ const mapDispatchToProps = (dispatch) => {
         addPlayer: (player, playerList) => { dispatch(addPlayer(player, playerList)); },
         updateNewPlayer: (name) => { dispatch(updateNewPlayer(name)); },
         removePlayer: (name) => { dispatch(removePlayer(name)); },
-        push: (routeName, props) => dispatch(push(routeName, props))
+        pushNavigate: (routeName, props) => dispatch(pushNavigate(routeName, props)),
+        startNewGame: (players) => dispatch(startNewGame(players))
     };
 };
 

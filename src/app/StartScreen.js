@@ -7,10 +7,12 @@ import {
   Image, 
   Platform, 
   TouchableNativeFeedback, 
-  TouchableOpacity } from 'react-native';
+  TouchableOpacity 
+} from 'react-native';
 import { connect } from 'react-redux';
-import { push } from '../app/NavigationReducer';
+import { pushNavigate } from '../app/NavigationReducer';
 import Button from '../components/Button';
+import i18n from '../i18n/translations';
 import { colors, fontFamily } from "../style";
 
 const initialWidth = Dimensions.get('window').width;
@@ -42,8 +44,8 @@ class StartScreen extends Component {
         <View style={ styles.buttonContainerStyle }>
           <Button
             large
-            title="Add Players"
-            onPress={() => { this.props.push('AddPlayers'); }}
+            title={i18n.t('startGame')}
+            onPress={() => { this.props.pushNavigate('AddPlayers'); }}
           />
         </View>
       </View>
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    push: (routeName, props) => dispatch(push(routeName, props))
+    pushNavigate: (routeName, props) => dispatch(pushNavigate(routeName, props))
   }
 };
 

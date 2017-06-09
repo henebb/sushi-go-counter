@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import { Font } from 'expo';
 
 export const colors = {
@@ -12,5 +13,35 @@ export const colors = {
 }
 
 export const fontFamily = "PaytoneOne"; 
-//Platform.OS === "ios" ? "Futura-CondensedExtraBold" : "sans-serif-condensed";
+
+export const globalStyles = StyleSheet.create({
+    playersListItemStyle: {
+        marginBottom: 10,
+        padding: 2,
+        paddingLeft: 20,
+        borderRadius: 20,
+        backgroundColor: colors.redLight,
+        flex: 1
+    },
+    playersListContentStyle: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
+    playersListTextStyle: {
+        color: colors.green,
+        fontFamily: fontFamily,
+        fontSize: 32
+    },
+    textShadowDark: {
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 6,
+        textShadowColor: "#000c"
+    },
+    textStyleOnBlack: {
+        color: colors.green,
+        fontFamily: fontFamily,
+        fontSize: 16
+    }
+});
 

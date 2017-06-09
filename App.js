@@ -4,7 +4,8 @@ import {
   StatusBar,
   View,
   Platform,
-  ActivityIndicator } from 'react-native';
+  ActivityIndicator
+} from 'react-native';
 
 import { Provider } from 'react-redux';
 import { Font } from 'expo';
@@ -12,6 +13,9 @@ import { Font } from 'expo';
 import store from './src/app/store';
 import Navigation from './src/app/Navigation';
 import { colors } from './src/style';
+import i18n, { initI18n } from './src/i18n/translations';
+
+initI18n();
 
 export default class App extends Component {
   state = {
