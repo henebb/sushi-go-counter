@@ -110,7 +110,6 @@ class ScoreBoardScreen extends Component {
                                         autoCorrect={false}
                                         onSubmitEditing={this.handleEnterScore}
                                         value={this.state.roundScoreForPlayer}
-                                        focus={this.state.enterScoreForPlayer === player.name}
                                         onChangeText={text => this.setState({roundScoreForPlayer: text})}
                                     />
                                     <TouchableOpacity
