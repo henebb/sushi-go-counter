@@ -11,7 +11,8 @@ import {
     TouchableOpacity,
     LayoutAnimation,
     Platform,
-    UIManager
+    UIManager,
+    findNodeHandle
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import Button from '../components/Button';
@@ -24,7 +25,7 @@ class ScoreBoardScreen extends Component {
     state = {
         enterScoreForPlayer: '',
         roundScoreForPlayer: '',
-        keyboardShowing: false
+        inputIsFocused: false
     };
     
     constructor() {
@@ -35,30 +36,12 @@ class ScoreBoardScreen extends Component {
         }
     }
 
-    componentWillMount() {
-        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
-        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
-    }
-
-    componentWillUnmount () {
-        this.keyboardDidShowListener.remove();
-        this.keyboardDidHideListener.remove();
-    }
-
-    keyboardDidShow = () => {
-        this.setState({ keyboardShowing: true });
-    };
-
-    keyboardDidHide = () => {
-        this.setState({ keyboardShowing: false });
-    };
-
     handleExpand = (event, playerName) => {
         // Animate the update
         LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
 
         if (playerName == null || this.state.enterScoreForPlayer === playerName) {
-            this.setState({ enterScoreForPlayer: '', roundScoreForPlayer: null });
+            this.setState({ enterScoreForPlayer: '', roundScoreForPlayer: null, inputIsFocused: false });
         } else {
             this.setState({ enterScoreForPlayer: playerName, roundScoreForPlayer: null });
             setTimeout(() => {
@@ -82,6 +65,30 @@ class ScoreBoardScreen extends Component {
         let playersList = this.props.players.slice(0); // Make a copy
         playersList.sort((a, b) => b.score - a.score);
         return playersList;
+    }
+
+    inputFocused = (playerName) => {
+        this.setState({ inputIsFocused: true });
+        setTimeout(() => {
+            let scrollResponder = this.refs.scrollView.getScrollResponder();
+            scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
+                findNodeHandle(this.refs[playerName]),
+                110, //additionalOffset
+                true
+            );
+        }, 50);
+    };
+
+    renderDummyKeyboardSpacer() {
+        if (Platform.OS === 'ios') {
+            return null;
+        }
+        if (this.state.inputIsFocused) {
+            return (
+                <View style={{ height: 300 }}></View>
+            );
+        }
+        return null;
     }
 
     renderPlayers() {
@@ -112,6 +119,8 @@ class ScoreBoardScreen extends Component {
                                         underlineColorAndroid="transparent"
                                         keyboardType="numeric"
                                         autoCorrect={false}
+                                        onFocus={() => this.inputFocused(player.name)}
+                                        onBlur={() => this.setState({ inputIsFocused: false })}
                                         onSubmitEditing={this.handleEnterScore}
                                         value={this.state.roundScoreForPlayer}
                                         onChangeText={text => this.setState({roundScoreForPlayer: text})}
@@ -130,28 +139,10 @@ class ScoreBoardScreen extends Component {
         });
     }
 
-    renderKeyboardDummy() {
-        if (this.state.keyboardShowing) {
-            setTimeout(() => {
-                this.scrollView.scrollToEnd();
-            }, 50);
-
-            const playersList = this.getSortedPlayersList();
-            const currentPlayer = this.state.enterScoreForPlayer;
-            const index = playersList.findIndex(p => p.name === currentPlayer);
-            const height = 80*index;
-
-            return (
-                <View style={{ height: height }}></View>
-            ); 
-        }
-        return null;
-    }
-
     render() {
         return (
             <ScrollView 
-                ref={sv => this.scrollView = sv}
+                ref="scrollView"
                 style={styles.containerStyle}
                 scrollEventThrottle={16}
                 keyboardShouldPersistTaps='handled'
@@ -170,7 +161,7 @@ class ScoreBoardScreen extends Component {
                         onPress={() => {this.props.finishRound(this.props.round)}}
                     />
                 </View>
-                {this.renderKeyboardDummy()}
+                {this.renderDummyKeyboardSpacer()}
             </ScrollView>
         );
     }
