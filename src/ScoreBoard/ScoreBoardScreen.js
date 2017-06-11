@@ -61,6 +61,9 @@ class ScoreBoardScreen extends Component {
             this.setState({ enterScoreForPlayer: '', roundScoreForPlayer: null });
         } else {
             this.setState({ enterScoreForPlayer: playerName, roundScoreForPlayer: null });
+            setTimeout(() => {
+                this.refs[playerName].focus();
+            }, 500);
         }        
 
         Keyboard.dismiss();
@@ -91,10 +94,10 @@ class ScoreBoardScreen extends Component {
                     >
                         <View style={ globalStyles.playersListItemStyle }>
                             <View style={ globalStyles.playersListContentStyle }>
-                                <Text style={[globalStyles.playersListTextStyle, globalStyles.textShadowDark]}>
+                                <Text style={[globalStyles.playersListTextStyle, globalStyles.textShadowDark, styles.playerNameStyle]}>
                                     {player.name}
                                 </Text>
-                                <Text style={[globalStyles.playersListTextStyle, globalStyles.textShadowDark, { paddingRight: 20, fontSize: 40 }]}>
+                                <Text style={[globalStyles.playersListTextStyle, globalStyles.textShadowDark, styles.scoreStyle]}>
                                     {player.score}
                                 </Text>
                             </View>
@@ -104,7 +107,8 @@ class ScoreBoardScreen extends Component {
                                 </View>
                                 <View style={styles.scoreForRoundTextInputAndButtonContainer}>
                                     <TextInput
-                                        style={styles.scoreForRoundTextInputStyle}
+                                        style={[styles.scoreForRoundTextInputStyle, {opacity: this.state.enterScoreForPlayer === player.name ? 1 : 0}]}
+                                        ref={player.name}
                                         underlineColorAndroid="transparent"
                                         keyboardType="numeric"
                                         autoCorrect={false}
@@ -113,6 +117,7 @@ class ScoreBoardScreen extends Component {
                                         onChangeText={text => this.setState({roundScoreForPlayer: text})}
                                     />
                                     <TouchableOpacity
+                                        style={{ flex: 1 }}
                                         onPress={this.handleEnterScore}
                                     >
                                         <FontAwesome name="check-circle-o" size={50} color={colors.green} style={globalStyles.textShadowDark}  />
@@ -195,10 +200,21 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start", 
         alignItems: "flex-start"
     },
+    playerNameStyle: {
+        flex: 0.865
+    },
+    scoreStyle: {
+        fontSize: 40, 
+        textAlign: "center", 
+        marginRight: 10, 
+        backgroundColor: "transparent", 
+        flex: 0.135
+    },
     scoreForRoundTextInputAndButtonContainer: {
         flexDirection: "row", 
         justifyContent: "flex-start", 
-        alignItems: "center"
+        alignItems: "center",
+        marginTop: Platform.OS === "ios" ? 5 : 0
     },
     scoreForRoundTextInputStyle: {
         backgroundColor: "#fff", 

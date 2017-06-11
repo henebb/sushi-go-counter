@@ -51,6 +51,6 @@ const styles = StyleSheet.create({
   viewStyle: {
     flex: 1,
     backgroundColor: colors.containerBgColor,
-    paddingTop: Platform.OS == "android" ? 24 : 0
+    paddingTop: Platform.OS == "android" ? 24 : 20
   }
 });

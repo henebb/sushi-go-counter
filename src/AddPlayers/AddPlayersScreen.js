@@ -65,11 +65,11 @@ class AddPlayersScreen extends Component {
                 return (
                     <View key={player} style={ globalStyles.playersListItemStyle }>
                         <View style={ globalStyles.playersListContentStyle }>
-                            <Text style={[globalStyles.playersListTextStyle, globalStyles.textShadowDark]}>
+                            <Text style={[globalStyles.playersListTextStyle, globalStyles.textShadowDark, { flex: 0.88 }]}>
                                 {player}
                             </Text>
                             <TouchableOpacity 
-                                style={{ paddingRight: 10 }}
+                                style={{ flex: 0.12, backgroundColor: "transparent" }}
                                 onPress={() => this.props.removePlayer(player)}
                             >
                                 <Icons name="delete-forever" size={32} color={colors.green} style={globalStyles.textShadowDark} />
@@ -109,7 +109,7 @@ class AddPlayersScreen extends Component {
                 <Text style={globalStyles.textStyleOnBlack}>
                     {i18n.t('playerName')}:
                 </Text>
-                <View>
+                <View style={styles.textInputWrapperStyle}>
                     <TextInput
                         autoCapitalize="words"
                         autoCorrect={false}
