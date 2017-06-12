@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
     buttonStyle: {
         borderWidth: 19,
         borderRadius: 20,
-        paddingTop: 15,
-        paddingBottom: 15,
+        paddingTop: 5,
+        paddingBottom: 5,
         borderColor: colors.redLight,
         backgroundColor: colors.redDark,
     },

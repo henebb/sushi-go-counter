@@ -2,7 +2,7 @@ import I18n from '../utils/i18n';
 
 export function initI18n(locale) {
     //I18n.defaultLocale = 'sv-SE';
-    I18n.locale = 'sv-SE';
+    I18n.locale = 'en';
     I18n.fallbacks = true; // fallbacks e.g. "sv-SE"" to "sv""
     I18n.translations = {
         en: {

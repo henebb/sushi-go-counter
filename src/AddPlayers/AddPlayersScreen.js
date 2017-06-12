@@ -9,7 +9,8 @@ import {
     Keyboard,
     TouchableOpacity,
     ToastAndroid,
-    Alert
+    Alert,
+    findNodeHandle
 } from 'react-native';
 import { connect } from 'react-redux';
 import { MaterialCommunityIcons as Icons } from '@expo/vector-icons';
@@ -32,25 +33,7 @@ class AddPlayersScreen extends Component {
     };
 
     state = {
-        keyboardShowing: false
-    };
-
-    componentWillMount() {
-        this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
-        this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
-    }
-
-    componentWillUnmount () {
-        this.keyboardDidShowListener.remove();
-        this.keyboardDidHideListener.remove();
-    }
-
-    keyboardDidShow = () => {
-        this.setState({ keyboardShowing: true });
-    };
-
-    keyboardDidHide = () => {
-        this.setState({ keyboardShowing: false });
+        inputIsFocused: false
     };
 
     renderPlayersList() {
@@ -88,14 +71,26 @@ class AddPlayersScreen extends Component {
         );
     }
 
-    renderKeyboardDummy() {
-        if (this.state.keyboardShowing) {
-            setTimeout(() => {
-                this.scrollView.scrollToEnd();
-            }, 50);
+    inputFocused = () => {
+        this.setState({ inputIsFocused: true });
+        setTimeout(() => {
+            let scrollResponder = this.refs.scrollView.getScrollResponder();
+            scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
+                findNodeHandle(this.refs.textInput),
+                110, //additionalOffset
+                true
+            );
+        }, 50);
+    };
+
+    renderDummyKeyboardSpacer() {
+        if (Platform.OS === 'ios') {
+            return null;
+        }
+        if (this.state.inputIsFocused) {
             return (
                 <View style={{ height: 300 }}></View>
-            ); 
+            );
         }
         return null;
     }
@@ -111,11 +106,14 @@ class AddPlayersScreen extends Component {
                 </Text>
                 <View style={styles.textInputWrapperStyle}>
                     <TextInput
+                        ref="textInput"
                         autoCapitalize="words"
                         autoCorrect={false}
                         value={this.props.newPlayer}
                         onChangeText={text => this.props.updateNewPlayer(text)}
                         onSubmitEditing={this.addPlayer}
+                        onFocus={() => this.inputFocused()}
+                        onBlur={() => this.setState({ inputIsFocused: false })}
                         style={styles.textInputStyle}
                         underlineColorAndroid={colors.green}
                     />
@@ -159,13 +157,15 @@ class AddPlayersScreen extends Component {
         } else {
             // Add player
             this.props.addPlayer(this.props.newPlayer, this.props.players);
+            this.setState({inputIsFocused: false});
+            this.refs.textInput.blur();
         }
     };
 
     render() {
         return (
             <ScrollView
-                ref={sv => this.scrollView = sv}
+                ref="scrollView"
                 style={styles.containerStyle}
                 contentContainerStyle={styles.containerContentStyle}
                 keyboardShouldPersistTaps="handled"
@@ -175,7 +175,7 @@ class AddPlayersScreen extends Component {
                 <View>
                     {this.renderAddPlayer()}
                     {this.renderStartButton()}
-                    {this.renderKeyboardDummy()}
+                    {this.renderDummyKeyboardSpacer()}
                 </View>
             </ScrollView>
         );

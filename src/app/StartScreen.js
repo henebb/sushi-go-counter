@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import { pushNavigate } from '../app/NavigationReducer';
 import Button from '../components/Button';
 import i18n from '../i18n/translations';
-import { colors, fontFamily } from "../style";
+import { colors, fontFamily, globalStyles } from "../style";
 
 const initialWidth = Dimensions.get('window').width;
 
@@ -41,12 +41,31 @@ class StartScreen extends Component {
             style={styles.imageStyle}
           />
         </View>
+        <View style={ styles.flagContainer }>
+          <TouchableOpacity style={ styles.flagButton }>
+            <Image 
+              source={require('../../images/united-kingdom-flag.png')} 
+              style={styles.flagStyle}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={ styles.flagButton }>
+            <Image 
+              source={require('../../images/sweden-flag.png')} 
+              style={styles.flagStyle}
+              />
+          </TouchableOpacity>
+        </View>
         <View style={ styles.buttonContainerStyle }>
           <Button
             large
             title={i18n.t('startGame')}
             onPress={() => { this.props.pushNavigate('AddPlayers'); }}
           />
+        </View>
+        <View>
+          <Text style={globalStyles.textStyleOnBlack}>
+            Sushi Go!™ is property of Gamewright®
+          </Text>
         </View>
       </View>
     );
@@ -58,12 +77,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     backgroundColor: colors.containerBgColor,
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     alignItems: "center"
   },
   imageContainer: {
-    alignSelf: "stretch",
-    marginBottom: 20
+    alignSelf: "stretch"
   },
   imageStyle: {
     flex: 1,
@@ -74,6 +92,19 @@ const styles = StyleSheet.create({
   buttonContainerStyle: {
     alignSelf: "stretch"
   },
+  flagContainer: {
+    flexDirection: 'row', 
+    height: 50
+  },
+  flagButton: {
+    flex: 1, 
+    justifyContent: 'center'
+  },
+  flagStyle: {
+    width: 100,
+    resizeMode: "contain",
+    alignSelf: "center"
+  }
 });
 
 const mapDispatchToProps = (dispatch) => {

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import { Provider } from 'react-redux';
-import { Font } from 'expo';
+import { Font, Constants } from 'expo';
 
 import store from './src/app/store';
 import Navigation from './src/app/Navigation';
@@ -51,6 +51,6 @@ const styles = StyleSheet.create({
   viewStyle: {
     flex: 1,
     backgroundColor: colors.containerBgColor,
-    paddingTop: Platform.OS == "android" ? 24 : 20
+    paddingTop: Constants.statusBarHeight
   }
 });
