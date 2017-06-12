@@ -29,7 +29,8 @@ class AddPlayersScreen extends Component {
         updateNewPlayer: PropTypes.func.isRequired,
         removePlayer: PropTypes.func.isRequired,
         pushNavigate: PropTypes.func.isRequired,
-        startNewGame: PropTypes.func.isRequired
+        startNewGame: PropTypes.func.isRequired,
+        locale: PropTypes.string
     };
 
     state = {
@@ -40,7 +41,7 @@ class AddPlayersScreen extends Component {
         let playersList;
         if (this.props.players.length === 0) {
             playersList = (<Text style={[globalStyles.textStyleOnBlack, {fontSize: 20, paddingLeft: 20}]}>
-                {i18n.t('noPlayers_Add')}
+                {i18n.t('noPlayers_Add', {locale: this.props.locale})}
             </Text>);
         }
         else {
@@ -64,7 +65,7 @@ class AddPlayersScreen extends Component {
         }
         return (
             <View>
-                <Text style={globalStyles.textStyleOnBlack}>{i18n.t('players')}:</Text>
+                <Text style={globalStyles.textStyleOnBlack}>{i18n.t('players', {locale: this.props.locale})}:</Text>
                 {playersList}
             </View>
             
@@ -102,7 +103,7 @@ class AddPlayersScreen extends Component {
         return (
             <View>
                 <Text style={globalStyles.textStyleOnBlack}>
-                    {i18n.t('playerName')}:
+                    {i18n.t('playerName', {locale: this.props.locale})}:
                 </Text>
                 <View style={styles.textInputWrapperStyle}>
                     <TextInput
@@ -119,7 +120,7 @@ class AddPlayersScreen extends Component {
                     />
                 </View>
                 <Button 
-                    title={i18n.t('addPlayer')}
+                    title={i18n.t('addPlayer', {locale: this.props.locale})}
                     onPress={this.addPlayer}
                 />
             </View>
@@ -133,7 +134,7 @@ class AddPlayersScreen extends Component {
         return (
             <View style={{ marginTop: 10 }}>
                 <Button 
-                    title={i18n.t('startGame')}
+                    title={i18n.t('startGame', {locale: this.props.locale})}
                     onPress={this.startGame}
                 />
             </View>
@@ -150,9 +151,9 @@ class AddPlayersScreen extends Component {
         if (this.props.players.findIndex(pl => pl === this.props.newPlayer) !== -1) {
             // Player already exists.   
             if (Platform.OS === 'android') {
-                ToastAndroid.showWithGravity(i18n.t('playerAlreadyExistsTitle'), ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(i18n.t('playerAlreadyExistsTitle', {locale: this.props.locale}), ToastAndroid.SHORT, ToastAndroid.TOP);
             } else {
-                Alert.alert(i18n.t('playerAlreadyExistsTitle'), i18n.t('playerAlreadyExistsMessage'));
+                Alert.alert(i18n.t('playerAlreadyExistsTitle', {locale: this.props.locale}), i18n.t('playerAlreadyExistsMessage', {locale: this.props.locale}));
             }
         } else {
             // Add player
@@ -212,7 +213,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
     return {
         players: state.players.playerList,
-        newPlayer: state.players.newPlayer
+        newPlayer: state.players.newPlayer,
+        locale: state.locale
     }
 };
 

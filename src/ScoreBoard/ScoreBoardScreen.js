@@ -110,7 +110,7 @@ class ScoreBoardScreen extends Component {
                             </View>
                             <View style={[styles.scoreForRoundContainer, {height: this.state.enterScoreForPlayer === player.name ? 95 : 0}]}>
                                 <View>
-                                    <Text style={[globalStyles.textStyleOnBlack, globalStyles.textShadowDark]}>{i18n.t('scoreForRound')}:</Text>
+                                    <Text style={[globalStyles.textStyleOnBlack, globalStyles.textShadowDark]}>{i18n.t('scoreForRound', {locale: this.props.locale})}:</Text>
                                 </View>
                                 <View style={styles.scoreForRoundTextInputAndButtonContainer}>
                                     <TextInput
@@ -148,16 +148,16 @@ class ScoreBoardScreen extends Component {
                 keyboardShouldPersistTaps='handled'
             >
                 <View style={styles.titleStyle}>
-                    <Text style={[globalStyles.textStyleOnBlack, { fontSize: 32, marginRight: 5 }]}>{i18n.t('round_colon')}</Text>
+                    <Text style={[globalStyles.textStyleOnBlack, { fontSize: 32, marginRight: 5 }]}>{i18n.t('round_colon', {locale: this.props.locale})}</Text>
                     <Text style={[globalStyles.textStyleOnBlack, { fontSize: 52 }]}>{this.props.round + 1}</Text>
                 </View>
                 <View style={{marginTop: -20, marginBottom: 20}}>
-                    <Text style={[globalStyles.textStyleOnBlack, {textAlign: 'center'}]}>{i18n.t('pressNameToEnterScore')}</Text>
+                    <Text style={[globalStyles.textStyleOnBlack, {textAlign: 'center'}]}>{i18n.t('pressNameToEnterScore', {locale: this.props.locale})}</Text>
                 </View>
                 {this.renderPlayers()}
                 <View style={{ marginTop: 10 }}>
                     <Button 
-                        title={i18n.t(this.props.round < 2 ? 'finishRound' : 'finishGame', {round: this.props.round + 1})}
+                        title={i18n.t(this.props.round < 2 ? 'finishRound' : 'finishGame', {locale: this.props.locale, round: this.props.round + 1})}
                         onPress={() => {this.props.finishRound(this.props.round)}}
                     />
                 </View>
@@ -172,6 +172,7 @@ class ScoreBoardScreen extends Component {
         pushNavigate: PropTypes.func.isRequired,
         addScoreForPlayer: PropTypes.func.isRequired,
         finishRound: PropTypes.func.isRequired,
+        locale: PropTypes.string
     }
 }
 
@@ -221,7 +222,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
     return {
         round: state.scoreBoard.round,
-        players: state.scoreBoard.players
+        players: state.scoreBoard.players,
+        locale: state.locale
     };
 };
 

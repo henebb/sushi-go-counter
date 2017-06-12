@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { 
   Dimensions,
   StyleSheet, 
   Text, 
+  ScrollView,
   View, 
   Image, 
   Platform, 
@@ -11,6 +12,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { pushNavigate } from '../app/NavigationReducer';
+import { changeLanguage } from '../i18n/TranslationReducer';
 import Button from '../components/Button';
 import i18n from '../i18n/translations';
 import { colors, fontFamily, globalStyles } from "../style";
@@ -18,12 +20,17 @@ import { colors, fontFamily, globalStyles } from "../style";
 const initialWidth = Dimensions.get('window').width;
 
 class StartScreen extends Component {
+  static propTypes = {
+    locale: PropTypes.string,
+    changeLanguage: PropTypes.func
+  };
+
   state = {
     imageHeight: StartScreen.calcImageHeight(initialWidth)
   };
 
   static calcImageHeight(width) {
-    return width > 300 & width < 400 ? 230 : 190;
+    return width > 300 & width < 400 ? 230 : 170;
   }
 
   onLayout = (e) => {
@@ -31,6 +38,10 @@ class StartScreen extends Component {
     const newHeight = StartScreen.calcImageHeight(width);
     this.setState({ imageHeight: newHeight });
   };
+
+  changeLocale(locale) {
+    this.props.changeLanguage(locale);
+  }
 
   render() {
     return (
@@ -42,29 +53,39 @@ class StartScreen extends Component {
           />
         </View>
         <View style={ styles.flagContainer }>
-          <TouchableOpacity style={ styles.flagButton }>
-            <Image 
-              source={require('../../images/united-kingdom-flag.png')} 
-              style={styles.flagStyle}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={ styles.flagButton }>
-            <Image 
-              source={require('../../images/sweden-flag.png')} 
-              style={styles.flagStyle}
+          <View style={ styles.flagView }>
+            <TouchableOpacity 
+              style={[styles.flagButton, this.props.locale === 'en' ? {borderColor: colors.redLight}: {}]}
+              onPress={() => {this.changeLocale('en')}}
+            >
+              <Image 
+                source={require('../../images/united-kingdom-flag.png')} 
+                style={styles.flagStyle}
               />
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
+          <View style={ styles.flagView }>
+            <TouchableOpacity 
+              style={[styles.flagButton, this.props.locale === 'sv' ? {borderColor: colors.redLight}: {}]}
+              onPress={() => {this.changeLocale('sv')}}
+            >
+              <Image 
+                source={require('../../images/sweden-flag.png')} 
+                style={styles.flagStyle}
+                />
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={ styles.buttonContainerStyle }>
           <Button
             large
-            title={i18n.t('startGame')}
+            title={i18n.t('startGame', {locale: this.props.locale})}
             onPress={() => { this.props.pushNavigate('AddPlayers'); }}
           />
         </View>
         <View>
           <Text style={globalStyles.textStyleOnBlack}>
-            Sushi Go!™ is property of Gamewright®
+            {i18n.t('copyrightGamewright', {locale: this.props.locale})}
           </Text>
         </View>
       </View>
@@ -94,23 +115,40 @@ const styles = StyleSheet.create({
   },
   flagContainer: {
     flexDirection: 'row', 
-    height: 50
+    height: 85
+  },
+  flagView: {
+    flex: 1,
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingLeft: 28,
+    paddingRight: 28,
   },
   flagButton: {
     flex: 1, 
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderWidth: 4,
+    borderColor: "transparent"
   },
   flagStyle: {
     width: 100,
-    resizeMode: "contain",
+    height: 63,
+    resizeMode: "cover",
     alignSelf: "center"
   }
 });
 
+const mapStateToProps = (state) => {
+  return {
+    locale: state.locale
+  };
+};
+
 const mapDispatchToProps = (dispatch) => {
   return {
-    pushNavigate: (routeName, props) => dispatch(pushNavigate(routeName, props))
+    pushNavigate: (routeName, props) => dispatch(pushNavigate(routeName, props)),
+    changeLanguage: (locale) => dispatch(changeLanguage(locale))
   }
 };
 
-export default connect(null, mapDispatchToProps)(StartScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(StartScreen);

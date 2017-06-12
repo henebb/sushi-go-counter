@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { BackHandler } from 'react-native';
 import { StackNavigator, addNavigationHelpers, NavigationActions } from 'react-navigation';
 
-import { pop } from './NavigationReducer';
+import { popNavigate } from './NavigationReducer';
 import StartScreen from './StartScreen';
 import AddPlayersScreen from '../AddPlayers/AddPlayersScreen';
 import ScoreBoardScreen from '../ScoreBoard/ScoreBoardScreen';
@@ -32,7 +32,7 @@ class Navigation extends Component {
         if (this.props.navigation.index === 0) {
             return false;
         }
-        this.props.pop();
+        this.props.popNavigate();
         return true;
     };
 
@@ -56,7 +56,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        pop: () => dispatch(pop())
+        popNavigate: () => dispatch(popNavigate())
     };
 };
 

@@ -6,6 +6,7 @@ export function initI18n(locale) {
     I18n.fallbacks = true; // fallbacks e.g. "sv-SE"" to "sv""
     I18n.translations = {
         en: {
+            copyrightGamewright: "Sushi Go!™ is property of Gamewright®",
             startGame: "Start Game",
             players: "Players",
             playerName: "Player Name",
@@ -20,6 +21,7 @@ export function initI18n(locale) {
             scoreForRound: "Add score"
         },
         sv: {
+            copyrightGamewright: "Sushi Go!™ ägs av Gamewright®",
             startGame: "Starta spelet",
             players: "Spelare",
             playerName: "Namn",
