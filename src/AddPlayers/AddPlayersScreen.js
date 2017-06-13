@@ -40,9 +40,11 @@ class AddPlayersScreen extends Component {
     renderPlayersList() {
         let playersList;
         if (this.props.players.length === 0) {
-            playersList = (<Text style={[globalStyles.textStyleOnBlack, {fontSize: 20, paddingLeft: 20}]}>
-                {i18n.t('noPlayers_Add', {locale: this.props.locale})}
-            </Text>);
+            playersList = (
+                <Text style={[globalStyles.textStyleOnBlack, {fontSize: 20, paddingLeft: 20}]}>
+                    {i18n.t('noPlayers_Add', {locale: this.props.locale})}
+                </Text>
+            );
         }
         else {
             playersList = this.props.players.map((player) => {
@@ -84,20 +86,22 @@ class AddPlayersScreen extends Component {
         }, 50);
     };
 
-    renderDummyKeyboardSpacer() {
-        if (Platform.OS === 'ios') {
-            return null;
-        }
-        if (this.state.inputIsFocused) {
-            return (
-                <View style={{ height: 300 }}></View>
-            );
-        }
-        return null;
+    scrollToMain() {
+        let scrollResponder = this.refs.scrollView.getScrollResponder();
+        scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
+            findNodeHandle(this.refs.main),
+            0,
+            true
+        );
     }
 
+    inputBlurred = () => {
+        this.setState({ inputIsFocused: false });
+        this.scrollToMain();
+    };
+
     renderAddPlayer() {
-        if (this.props.players.length > 4) {
+        if (this.isMaxNumPlayers()) {
             return null;
         }
         return (
@@ -113,8 +117,8 @@ class AddPlayersScreen extends Component {
                         value={this.props.newPlayer}
                         onChangeText={text => this.props.updateNewPlayer(text)}
                         onSubmitEditing={this.addPlayer}
-                        onFocus={() => this.inputFocused()}
-                        onBlur={() => this.setState({ inputIsFocused: false })}
+                        onFocus={this.inputFocused}
+                        onBlur={this.inputBlurred}
                         style={styles.textInputStyle}
                         underlineColorAndroid={colors.green}
                     />
@@ -158,25 +162,34 @@ class AddPlayersScreen extends Component {
         } else {
             // Add player
             this.props.addPlayer(this.props.newPlayer, this.props.players);
-            this.setState({inputIsFocused: false});
             this.refs.textInput.blur();
+            this.setState({ inputIsFocused: false });
+            setTimeout(() => {
+                this.scrollToMain();
+            }, 200);
         }
     };
+
+    isMaxNumPlayers() {
+        if (!this.props.players) {
+            return false;
+        }
+        return this.props.players.length > 4;
+    }
 
     render() {
         return (
             <ScrollView
                 ref="scrollView"
-                style={styles.containerStyle}
+                style={[styles.containerStyle, this.state.inputIsFocused && Platform.OS === 'android' ? { marginTop: -(this.props.players.length*20)} : null]}
                 contentContainerStyle={styles.containerContentStyle}
                 keyboardShouldPersistTaps="handled"
             >
                 {this.renderPlayersList()}
                 
-                <View>
+                <View ref="main">
                     {this.renderAddPlayer()}
                     {this.renderStartButton()}
-                    {this.renderDummyKeyboardSpacer()}
                 </View>
             </ScrollView>
         );

@@ -128,7 +128,10 @@ class StartScreen extends Component {
         <View style={[styles.imageContainer, {height: this.state.imageHeight}]}>
           {this.renderLogo()}
         </View>
-        {this.renderFlags({})}
+        {this.renderFlags(Platform.select({
+          ios: {paddingLeft: 20, paddingRight: 20},
+          android: {}
+        }))}
         <View style={ styles.buttonContainerStyle }>
           {this.renderStartGameButton()}
         </View>

@@ -24,8 +24,7 @@ import { addScoreForPlayer, finishRound } from './ScoreBoardReducer';
 class ScoreBoardScreen extends Component {
     state = {
         enterScoreForPlayer: '',
-        roundScoreForPlayer: '',
-        inputIsFocused: false
+        roundScoreForPlayer: ''
     };
     
     constructor() {
@@ -41,15 +40,14 @@ class ScoreBoardScreen extends Component {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
 
         if (playerName == null || this.state.enterScoreForPlayer === playerName) {
-            this.setState({ enterScoreForPlayer: '', roundScoreForPlayer: null, inputIsFocused: false });
+            this.setState({ enterScoreForPlayer: '', roundScoreForPlayer: null });
+            Keyboard.dismiss();
         } else {
             this.setState({ enterScoreForPlayer: playerName, roundScoreForPlayer: null });
             setTimeout(() => {
                 this.refs[playerName].focus();
             }, 500);
-        }        
-
-        Keyboard.dismiss();
+        }
     };
 
     handleEnterScore = () => {
@@ -68,7 +66,6 @@ class ScoreBoardScreen extends Component {
     }
 
     inputFocused = (playerName) => {
-        this.setState({ inputIsFocused: true });
         setTimeout(() => {
             let scrollResponder = this.refs.scrollView.getScrollResponder();
             scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
@@ -76,20 +73,21 @@ class ScoreBoardScreen extends Component {
                 110, //additionalOffset
                 true
             );
-        }, 50);
+        }, 500);
     };
 
-    renderDummyKeyboardSpacer() {
-        if (Platform.OS === 'ios') {
-            return null;
-        }
-        if (this.state.inputIsFocused) {
-            return (
-                <View style={{ height: 300 }}></View>
-            );
-        }
-        return null;
+    scrollToMain() {
+        let scrollResponder = this.refs.scrollView.getScrollResponder();
+        scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
+            findNodeHandle(this.refs.main),
+            0,
+            true
+        );
     }
+
+    inputBlurred = () => {
+        this.scrollToMain();
+    };
 
     renderPlayers() {
         const playersList = this.getSortedPlayersList();
@@ -117,10 +115,10 @@ class ScoreBoardScreen extends Component {
                                         style={[styles.scoreForRoundTextInputStyle, {opacity: this.state.enterScoreForPlayer === player.name ? 1 : 0}]}
                                         ref={player.name}
                                         underlineColorAndroid="transparent"
-                                        keyboardType="numeric"
+                                        keyboardType={Platform.OS === "ios" ? "numbers-and-punctuation" : "numeric"}
                                         autoCorrect={false}
                                         onFocus={() => this.inputFocused(player.name)}
-                                        onBlur={() => this.setState({ inputIsFocused: false })}
+                                        onBlur={this.inputBlurred}
                                         onSubmitEditing={this.handleEnterScore}
                                         value={this.state.roundScoreForPlayer}
                                         onChangeText={text => this.setState({roundScoreForPlayer: text})}
@@ -139,6 +137,15 @@ class ScoreBoardScreen extends Component {
         });
     }
 
+    renderKeyboardDummy() {
+        if (Platform.OS === 'ios') {
+            return null;
+        }
+        return (
+            <View style={{height: 200}}></View>
+        );
+    }
+
     render() {
         return (
             <ScrollView 
@@ -147,11 +154,11 @@ class ScoreBoardScreen extends Component {
                 scrollEventThrottle={16}
                 keyboardShouldPersistTaps='handled'
             >
-                <View style={styles.titleStyle}>
+                <View ref="main" style={styles.titleStyle}>
                     <Text style={[globalStyles.textStyleOnBlack, { fontSize: 32, marginRight: 5 }]}>{i18n.t('round_colon', {locale: this.props.locale})}</Text>
                     <Text style={[globalStyles.textStyleOnBlack, { fontSize: 52 }]}>{this.props.round + 1}</Text>
                 </View>
-                <View style={{marginTop: -20, marginBottom: 20}}>
+                <View style={styles.subtitleStyle}>
                     <Text style={[globalStyles.textStyleOnBlack, {textAlign: 'center'}]}>{i18n.t('pressNameToEnterScore', {locale: this.props.locale})}</Text>
                 </View>
                 {this.renderPlayers()}
@@ -161,7 +168,7 @@ class ScoreBoardScreen extends Component {
                         onPress={() => {this.props.finishRound(this.props.round)}}
                     />
                 </View>
-                {this.renderDummyKeyboardSpacer()}
+                {this.renderKeyboardDummy()}
             </ScrollView>
         );
     }
@@ -179,13 +186,26 @@ class ScoreBoardScreen extends Component {
 const styles = StyleSheet.create({
     containerStyle: {
         flex: 1,
-        backgroundColor: colors.containerBgColor,
+        backgroundColor: colors.containerBgColor
     },
     titleStyle: {
         flex: 1, 
         flexDirection: "row", 
         alignItems: "center", 
-        justifyContent: "center"
+        justifyContent: "center",
+        marginTop: -20
+    },
+    subtitleStyle: {
+        ...Platform.select({
+            ios: {
+                marginTop: -10, 
+                marginBottom: 10
+            },
+            android: {
+                marginTop: -20, 
+                marginBottom: 10
+            }
+        })
     },
     scoreForRoundContainer: {
         flex: 1, 
