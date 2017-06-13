@@ -8,7 +8,7 @@ import {
   Image, 
   Platform, 
   TouchableNativeFeedback, 
-  TouchableOpacity 
+  TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import { pushNavigate } from '../app/NavigationReducer';
@@ -17,7 +17,7 @@ import Button from '../components/Button';
 import i18n from '../i18n/translations';
 import { colors, fontFamily, globalStyles } from "../style";
 
-const initialWidth = Dimensions.get('window').width;
+const dimension = Dimensions.get('window');
 
 class StartScreen extends Component {
   static propTypes = {
@@ -26,7 +26,8 @@ class StartScreen extends Component {
   };
 
   state = {
-    imageHeight: StartScreen.calcImageHeight(initialWidth)
+    imageHeight: StartScreen.calcImageHeight(dimension.width),
+    isLandscape: dimension.width > dimension.height
   };
 
   static calcImageHeight(width) {
@@ -34,58 +35,106 @@ class StartScreen extends Component {
   }
 
   onLayout = (e) => {
-    const { width } = Dimensions.get('window');
+    const { width, height } = Dimensions.get('window');
     const newHeight = StartScreen.calcImageHeight(width);
-    this.setState({ imageHeight: newHeight });
+    this.setState({ imageHeight: newHeight, isLandscape: width > height });
   };
 
   changeLocale(locale) {
     this.props.changeLanguage(locale);
   }
 
-  render() {
+  renderLogo() {
     return (
-      <View style={styles.container}>
-        <View style={[styles.imageContainer, {height: this.state.imageHeight}]} onLayout={this.onLayout}>
-          <Image
-            source={require('../../images/logo1.png')}
-            style={styles.imageStyle}
-          />
+      <Image
+        source={require('../../images/logo1.png')}
+        style={styles.imageStyle}
+      />
+    );
+  }
+
+  renderFlags(additionalFlagViewStyle) {
+    return (
+      <View style={ styles.flagContainer }>
+        <View style={ [styles.flagView, additionalFlagViewStyle] }>
+          <TouchableOpacity 
+            style={[styles.flagButton, this.props.locale === 'en' ? {borderColor: colors.redLight}: {}]}
+            onPress={() => {this.changeLocale('en')}}
+          >
+            <Image 
+              source={require('../../images/united-kingdom-flag.png')} 
+              style={styles.flagStyle}
+            />
+          </TouchableOpacity>
         </View>
-        <View style={ styles.flagContainer }>
-          <View style={ styles.flagView }>
-            <TouchableOpacity 
-              style={[styles.flagButton, this.props.locale === 'en' ? {borderColor: colors.redLight}: {}]}
-              onPress={() => {this.changeLocale('en')}}
-            >
-              <Image 
-                source={require('../../images/united-kingdom-flag.png')} 
-                style={styles.flagStyle}
+        <View style={ [styles.flagView, additionalFlagViewStyle] }>
+          <TouchableOpacity 
+            style={[styles.flagButton, this.props.locale === 'sv' ? {borderColor: colors.redLight}: {}]}
+            onPress={() => {this.changeLocale('sv')}}
+          >
+            <Image 
+              source={require('../../images/sweden-flag.png')} 
+              style={styles.flagStyle}
               />
-            </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  renderStartGameButton() {
+    return (
+      <Button
+        large
+        title={i18n.t('startGame', {locale: this.props.locale})}
+        onPress={() => { this.props.pushNavigate('AddPlayers'); }}
+      />
+    );
+  }
+
+  getCopyright() {
+    return i18n.t('copyrightGamewright', {locale: this.props.locale});
+  }
+
+  render() {
+    if (this.state.isLandscape) {
+      return (
+        <View style={landscapeStyles.container} onLayout={this.onLayout}>
+          <View style={landscapeStyles.mainContainer}>
+            <View style={{ flex: 1 }}>
+              {this.renderLogo()}
+            </View>
+            <View style={{ flex: 1 }}>
+              <View style={landscapeStyles.flagsContainer}>
+                {this.renderFlags({paddingLeft: 10, paddingRight: 10})}
+              </View>
+              <View style={landscapeStyles.buttonContainer}>
+                {this.renderStartGameButton()}
+              </View>
+            </View>
           </View>
-          <View style={ styles.flagView }>
-            <TouchableOpacity 
-              style={[styles.flagButton, this.props.locale === 'sv' ? {borderColor: colors.redLight}: {}]}
-              onPress={() => {this.changeLocale('sv')}}
-            >
-              <Image 
-                source={require('../../images/sweden-flag.png')} 
-                style={styles.flagStyle}
-                />
-            </TouchableOpacity>
+          <View style={landscapeStyles.footerContainer}>
+            <Text style={[globalStyles.textStyleOnBlack, {textAlign: 'center'}]}>
+              {this.getCopyright()}
+            </Text>
           </View>
         </View>
+      );
+    }
+
+    // Portrait mode:
+    return (
+      <View style={styles.container} onLayout={this.onLayout}>
+        <View style={[styles.imageContainer, {height: this.state.imageHeight}]}>
+          {this.renderLogo()}
+        </View>
+        {this.renderFlags({})}
         <View style={ styles.buttonContainerStyle }>
-          <Button
-            large
-            title={i18n.t('startGame', {locale: this.props.locale})}
-            onPress={() => { this.props.pushNavigate('AddPlayers'); }}
-          />
+          {this.renderStartGameButton()}
         </View>
         <View>
           <Text style={globalStyles.textStyleOnBlack}>
-            {i18n.t('copyrightGamewright', {locale: this.props.locale})}
+            {this.getCopyright()}
           </Text>
         </View>
       </View>
@@ -135,6 +184,29 @@ const styles = StyleSheet.create({
     height: 63,
     resizeMode: "cover",
     alignSelf: "center"
+  }
+});
+
+const landscapeStyles = StyleSheet.create({
+  container: {
+    flex: 1, 
+    backgroundColor: colors.containerBgColor
+  },
+  mainContainer: {
+    flex: 10, 
+    flexDirection: 'row'
+  },
+  footerContainer: {
+    flex: 1
+  },
+  flagsContainer: {
+    flex: 1, 
+    justifyContent: 'flex-end'
+  },
+  buttonContainer: {
+    flex: 1, 
+    justifyContent: 'flex-start', 
+    padding: 10
   }
 });
 
