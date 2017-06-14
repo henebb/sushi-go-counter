@@ -7,11 +7,13 @@ import { popNavigate } from './NavigationReducer';
 import StartScreen from './StartScreen';
 import AddPlayersScreen from '../AddPlayers/AddPlayersScreen';
 import ScoreBoardScreen from '../ScoreBoard/ScoreBoardScreen';
+import ResultScreen from '../Result/ResultScreen';
 
 export const Navigator = StackNavigator({
         Start: { screen: StartScreen },
         AddPlayers: { screen: AddPlayersScreen },
-        ScoreBoard: { screen: ScoreBoardScreen }
+        ScoreBoard: { screen: ScoreBoardScreen },
+        Result: { screen: ResultScreen }
     }, 
     {
         headerMode: 'none'

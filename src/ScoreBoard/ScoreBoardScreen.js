@@ -136,6 +136,18 @@ class ScoreBoardScreen extends Component {
         });
     }
 
+    timeToFinishGame() {
+        return this.props.round >= 2;
+    }
+
+    handleFinishButton = () => {
+        if (this.timeToFinishGame()) {
+            this.props.pushNavigate('Result');
+        } else {
+            this.props.finishRound(this.props.round);
+        }
+    };
+
     renderKeyboardDummy() {
         if (Platform.OS === 'ios') {
             return null;
@@ -163,8 +175,8 @@ class ScoreBoardScreen extends Component {
                 {this.renderPlayers()}
                 <View style={{ marginTop: 10 }}>
                     <Button 
-                        title={i18n.t(this.props.round < 2 ? 'finishRound' : 'finishGame', {locale: this.props.locale, round: this.props.round + 1})}
-                        onPress={() => {this.props.finishRound(this.props.round)}}
+                        title={i18n.t(this.timeToFinishGame() ? 'finishGame' : 'finishRound', {locale: this.props.locale, round: this.props.round + 1})}
+                        onPress={this.handleFinishButton}
                     />
                 </View>
                 {this.renderKeyboardDummy()}
