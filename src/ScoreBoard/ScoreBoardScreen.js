@@ -44,9 +44,7 @@ class ScoreBoardScreen extends Component {
             Keyboard.dismiss();
         } else {
             this.setState({ enterScoreForPlayer: playerName, roundScoreForPlayer: null });
-            setTimeout(() => {
-                this.refs[playerName].focus();
-            }, 500);
+            this.refs[playerName].focus();
         }
     };
 
@@ -66,14 +64,15 @@ class ScoreBoardScreen extends Component {
     }
 
     inputFocused = (playerName) => {
+        console.log('input focused', playerName);
         setTimeout(() => {
             let scrollResponder = this.refs.scrollView.getScrollResponder();
             scrollResponder.scrollResponderScrollNativeHandleToKeyboard(
                 findNodeHandle(this.refs[playerName]),
-                110, //additionalOffset
+                Platform.OS === 'ios' ? 110 : 250, //additionalOffset
                 true
             );
-        }, 500);
+        }, 10);
     };
 
     scrollToMain() {

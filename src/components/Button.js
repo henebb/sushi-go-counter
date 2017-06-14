@@ -29,8 +29,8 @@ class Button extends Component {
 
 const styles = StyleSheet.create({
     buttonStyle: {
-        borderWidth: 19,
-        borderRadius: 20,
+        borderWidth: 18,
+        borderRadius: 25,
         paddingTop: 5,
         paddingBottom: 5,
         borderColor: colors.redLight,
