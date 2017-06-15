@@ -1,7 +1,24 @@
 {
   "expo": {
     "sdkVersion": "17.0.0",
-    "name": "Sushi Go Counter",
-    "icon": "./images/app-logo.png"
+    "name": "Sushi Go! Counter",
+    "description": "A simple score counter for the card game Sushi Go! by Gamewright.",
+    "icon": "./images/app-logo.png",
+    "slug": "sushi-go-counter",
+    "privacy": "public",
+    "version": "1.0.0",
+    "loading": {
+      "icon": "./images/app-logo.png",
+      "backgroundColor": "#000000",
+      "hideExponentText": true
+    },
+    "primaryColor": "#000000",
+    "androidStatusBarColor": "#000000",
+    "ios": {
+      "bundleIdentifier": "se.henebb.sushigocounter"
+    },
+    "android": {
+      "package": "se.henebb.sushigocounter"
+    }
   }
 }
