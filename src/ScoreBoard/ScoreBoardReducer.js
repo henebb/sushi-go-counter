@@ -1,4 +1,4 @@
-const NEW_GAME = "NEW_GAME";
+const START_NEW_GAME = "START_NEW_GAME";
 const ADD_SCORE_FOR_PLAYER = 'ADD_SCORE_FOR_PLAYER';
 const FINISH_ROUND = 'FINISH_ROUND';
 
@@ -9,7 +9,7 @@ const initialState = {
 
 export const scoreBoard = (state = initialState, action) => {
     switch (action.type) {
-        case NEW_GAME:
+        case START_NEW_GAME:
             return { round: 0, players: action.players };
         case ADD_SCORE_FOR_PLAYER:
             const { player, score } = action.payload;
@@ -34,7 +34,7 @@ function getRandomInt(min, max) {
 }
 
 export const startNewGame = (players) => ({
-    type: NEW_GAME,
+    type: START_NEW_GAME,
     players: players.map(player => {
         return { name: player, score: 0 };
     })

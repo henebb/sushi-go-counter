@@ -18,7 +18,8 @@ export function initI18n(locale) {
             finishRound: "Finish Round",
             finishGame: "Finish Game",
             pressNameToEnterScore: "Tap a name to enter score.",
-            scoreForRound: "Add score"
+            scoreForRound: "Add score",
+            newGame: "New Game"
         },
         sv: {
             copyrightGamewright: "Sushi Go!™ ägs av Gamewright®",
@@ -33,7 +34,8 @@ export function initI18n(locale) {
             finishRound: "Avsluta runda",
             finishGame: "Avsluta spelet",
             pressNameToEnterScore: "Tryck på ett namn för att ange poäng.",
-            scoreForRound: "Lägg till poäng"
+            scoreForRound: "Lägg till poäng",
+            newGame: "Nytt spel"
         }
     };
 }

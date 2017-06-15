@@ -162,7 +162,6 @@ class ScoreBoardScreen extends Component {
             <ScrollView 
                 ref="scrollView"
                 style={styles.containerStyle}
-                scrollEventThrottle={16}
                 keyboardShouldPersistTaps='handled'
             >
                 <View ref="main" style={styles.titleStyle}>
