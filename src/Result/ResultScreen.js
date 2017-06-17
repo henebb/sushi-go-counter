@@ -3,7 +3,8 @@ import {
     View, 
     ScrollView, 
     Text, 
-    StyleSheet
+    StyleSheet,
+    Image
 } from 'react-native';
 import { connect } from 'react-redux';
 import { MaterialCommunityIcons as MCIcons, Ionicons, Foundation, Entypo } from '@expo/vector-icons';
@@ -60,14 +61,20 @@ class ResultScreen extends Component {
                 trophy = <Ionicons name="md-trophy" size={fontSize*1.5} color="#CD7F32" style={[scoreGlowStyle, styles.trophyIconStyle]} />;
                 fontColor = "#CD7F32";                             
             } else {
-                trophy = <Entypo name="medal" size={fontSize*1.5} color={colors.redLight} style={[scoreGlowStyle, styles.trophyIconStyle]} />
+                trophy = <Image source={require("../../images/MedalGold.png")} style={{height: 30, width: 40, marginTop: 5, marginBottom: 5, resizeMode: "contain"}} />
             }
             return(
                 <View key={player.name} style={styles.playerScoreRow}>
-                    <Text style={[globalStyles.textStyleOnBlack, scoreGlowStyle, {fontSize: fontSize*1.2, color: fontColor, width: 50, }]}>{index+1}</Text>
+                    <Text style={[globalStyles.textStyleOnBlack, scoreGlowStyle, {fontSize: fontSize*1.2, color: fontColor, width: 50, }]}>
+                        {index+1}
+                    </Text>
                     {trophy}
-                    <Text style={[globalStyles.textStyleOnBlack, scoreGlowStyle, { fontSize, color: fontColor, flex: 1, paddingLeft: 15, textAlign: "left" }]}>{player.name}</Text>
-                    <Text style={[globalStyles.textStyleOnBlack, scoreGlowStyle, { fontSize, color: fontColor, width: 60 }]}>{player.score}</Text>
+                    <Text style={[globalStyles.textStyleOnBlack, scoreGlowStyle, { fontSize, color: fontColor, flex: 1, paddingLeft: 15, textAlign: "left" }]}>
+                        {player.name}
+                    </Text>
+                    <Text style={[globalStyles.textStyleOnBlack, scoreGlowStyle, { fontSize, color: fontColor, width: 80, textAlign: "right", paddingRight: 5 }]}>
+                        {player.score}
+                    </Text>
                 </View>
             );
         })

@@ -223,14 +223,15 @@ const styles = StyleSheet.create({
         alignItems: "flex-start"
     },
     playerNameStyle: {
-        flex: 0.865
+        flex: 0.75
     },
     scoreStyle: {
         fontSize: 40, 
-        textAlign: "center", 
+        textAlign: "right", 
         marginRight: 10, 
+        paddingRight: 5,
         backgroundColor: "transparent", 
-        flex: 0.135
+        flex: 0.25
     },
     scoreForRoundTextInputAndButtonContainer: {
         flexDirection: "row", 
