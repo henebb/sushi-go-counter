@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import { Provider } from 'react-redux';
-import { Font, Constants } from 'expo';
+import { Font, Constants, AppLoading, Asset } from 'expo';
 
 import store from './src/app/store';
 import Navigation from './src/app/Navigation';
@@ -19,22 +19,41 @@ initI18n();
 
 export default class App extends Component {
   state = {
-    fontLoaded: false
+    fontLoaded: false,
+    imagesLoaded: false
   };
 
   async componentDidMount() {
+    this.loadFonts();
+    this.loadImages();
+  }
+
+  async loadFonts() {
     await Font.loadAsync({
       'PaytoneOne': require('./assets/fonts/PaytoneOne.ttf')
     });
     this.setState({ fontLoaded: true });
   }
 
+  async loadImages() {
+    const images = [
+      require('./images/logo1.png'),
+      require('./images/MedalGold.png'),
+      require('./images/sweden-flag.png'),
+      require('./images/united-kingdom-flag.png'),
+    ];
+
+    await Promise.all(
+      images.map(image => Asset.fromModule(image).downloadAsync())
+    );
+
+    this.setState({ imagesLoaded: true });
+  }
+
   render() {
-    if (!this.state.fontLoaded) {
+    if (!this.state.fontLoaded || !this.state.imagesLoaded) {
       return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.containerBgColor }}>
-          <ActivityIndicator size="large" />
-        </View>
+        <AppLoading />
       );
     }
     return (
