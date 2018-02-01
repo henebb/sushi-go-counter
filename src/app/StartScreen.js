@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { 
   Dimensions,
   StyleSheet, 
@@ -10,6 +10,7 @@ import {
   TouchableNativeFeedback, 
   TouchableOpacity
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { pushNavigate } from '../app/NavigationReducer';
 import { changeLanguage } from '../i18n/TranslationReducer';

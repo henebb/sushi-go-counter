@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { 
     View, 
     ScrollView, 
@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Image
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { MaterialCommunityIcons as MCIcons, Ionicons, Foundation, Entypo } from '@expo/vector-icons';
 import { newGame } from '../app/NavigationReducer';

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { 
     View, 
     ScrollView, 
@@ -12,6 +12,7 @@ import {
     Alert,
     findNodeHandle
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { MaterialCommunityIcons as Icons } from '@expo/vector-icons';
 import { pushNavigate } from '../app/NavigationReducer';

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { 
     View,
@@ -14,6 +14,7 @@ import {
     UIManager,
     findNodeHandle
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { FontAwesome } from '@expo/vector-icons';
 import Button from '../components/Button';
 import i18n from '../i18n/translations';
