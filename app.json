@@ -1,6 +1,6 @@
 {
   "expo": {
-    "sdkVersion": "26.0.0",
+    "sdkVersion": "33.0.0",
     "name": "Sushi Go! Counter",
     "description": "A simple score counter for the card game Sushi Go! by Gamewright.",
     "icon": "./images/app-logo.png",
